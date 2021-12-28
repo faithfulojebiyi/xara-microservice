@@ -11,8 +11,6 @@ const {
   TEMPLATE_NOT_FOUND,
   DELETE_TEMPLATE_SUCCESS,
   DELETE_TEMPLATE_ERROR,
-  UPDATE_TEMPLATE_ERROR,
-  UPDATE_TEMPLATE_SUCCESS,
   FETCH_TEMPLATE_ERROR,
   FETCH_TEMPLATE_SUCCESS
 } = constants
@@ -111,35 +109,6 @@ class TemplateController {
       })
       moduleErrLogMessager(dbError)
       next(new ApiError({ message: DELETE_TEMPLATE_ERROR }))
-    }
-  }
-
-  /**
-   * Controller used for moving templates to new category
-   * @static
-   * @param {Request} req - The request from the endpoint.
-   * @param {Response} res - The response returned by the method.
-   * @param {Next} next - The next function
-   * @returns { JSON } A JSON response containing the details of the contact us added
-   * @memberof TemplateController
-   */
-  static async moveTemplateToNewCategory (req, res, next) {
-    try {
-      const template = await Template.findByIdAndUpdate(req.params.id, {
-        categoryId: req.body.tocategoryId,
-        ancestorsIds: req.ancestors
-      })
-      return successResponse(res, {
-        message: UPDATE_TEMPLATE_SUCCESS,
-        data: { ...template }
-      })
-    } catch (e) {
-      const dbError = new DBError({
-        status: UPDATE_TEMPLATE_ERROR,
-        message: e.message
-      })
-      moduleErrLogMessager(dbError)
-      next(new ApiError({ message: UPDATE_TEMPLATE_ERROR }))
     }
   }
 }

@@ -19,7 +19,7 @@ const {
  */
 class CategoryMiddleware {
   /**
-   * Validates Category request credentials.
+   * Validates Category request credentials check if category exists.
    * @static
    * @param { Object } req - The request from the endpoint.
    * @param { Object } res - The response returned by the method.
@@ -90,6 +90,7 @@ class CategoryMiddleware {
 
   /**
    * Validates toCategory request credentials.
+   * toCategory is the category to which the category is being moved.
    * @static
    * @param { Object } req - The request from the endpoint.
    * @param { Object } res - The response returned by the method.
