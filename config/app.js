@@ -5,7 +5,8 @@ const config = require('./env')
 const morgan = require('morgan')
 const mongoose = require('mongoose')
 const { Helpers, constants, genericErrors } = require('../app/utils')
-const { WELCOME } = constants
+const { WELCOME, v1 } = constants
+const apiRoutes = require('../app/routes')
 const { notFoundApi } = genericErrors
 const { GenericHelper: { errorResponse, successResponse } } = Helpers
 
@@ -29,6 +30,7 @@ const appConfig = (app) => {
   app.options('*', cors())
   app.get('/', (req, res) => successResponse(res, { message: WELCOME }))
   // catches 404 errors and forwards them to error handlers
+  app.use(v1, apiRoutes)
   app.use((req, res, next) => {
     next(notFoundApi)
   })
