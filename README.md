@@ -98,5 +98,17 @@ To run tests, run the following command make sure you kill your dev server
 | `displayName` | `string` | **Required**. Name of the template |
 | `categoryId`  | `string` |**Default**  `Null` The category to be added to |
 
+### Additional Info
+All logs are inside the `log` folder 
 
-  
+
+## 🚀 About Me
+### My name is Faithful Ojebiyi. 
+I am a framework-agnostic Backend Heavy Javascript developer;
+
+- 🌱 I’m currently learning how to build D3Apps using blockchain
+- 🖥 My current development stack is Nodejs, MongoDB, PostgreSQL, MySQL, Redis Expressjs React, Vuejs, Nextjs, Nuxt, Python, Flask, Docker, 
+- 📫 How to reach me: [faithfulojebiyi@gmail.com](mailto:faithfulojebiyi@gmail.com)
+- 😄 Pronouns: He/Him
+- ⚡ Fun fact: I turn coffee to code and music keeps me going. I am a perfectionist
+- 🏅 Github Profile Visits ![Visitor Count](https://profile-counter.glitch.me/faithfulojebiyi/count.svg)
