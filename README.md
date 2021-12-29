@@ -24,6 +24,8 @@ look at the example in `.env.example`
 
 `DATABASE_URL`
 
+`TEST_DATABASE_URL`
+
 `NODE_ENV`
 
   
