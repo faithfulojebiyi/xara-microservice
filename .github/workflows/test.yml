@@ -1,0 +1,33 @@
+name: Run Test
+
+env:
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+  NODE_ENV: test
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  run_unit_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set Up Environment Variables
+        run: |
+          chmod +x ./scripts/setup_env.sh
+          ./scripts/setup_env.sh
+        shell: bash
+      - name: Show .env file content
+        run: |
+          pwd
+          ls -la
+          cat .env
+      - name: Run unit tests
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14.x'
+      - run: npm ci
+      - run: npm run test
+  
