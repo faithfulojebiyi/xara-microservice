@@ -136,40 +136,49 @@ class CategoryController {
     const session = await db.startSession()
     session.startTransaction()
     try {
-      const queryTemplate1 = await Template.updateMany(
-        { categoryId: req.category.categoryId },
-        { $set: { categoryId: req.body.toCategoryId } }
+      const queryTemplate1 = await Template.updateMany({
+        $and: [
+          { ancestorsIds: { $all: [req.category.categoryId] } },
+          { categoryId: { $ne: req.category.categoryId } }
+        ]
+      },
+      { $push: { ancestorsIds: req.body.toCategoryId } }
       )
-      const queryTemplate2 = await Template.updateMany(
-        { ancestorsIds: { $all: [req.category.categoryId] } },
-        { $push: { ancestorsIds: req.body.toCategoryId } }
-      )
-      const queryTemplate3 = await Template.updateMany(
-        { ancestorsIds: { $all: [req.category.categoryId] } },
-        { $pullAll: { ancestorsIds: [req.category.categoryId] } }
+      const queryTemplate2 = await Template.updateMany({
+        $and: [
+          { ancestorsIds: { $all: [req.category.categoryId] } },
+          { categoryId: { $ne: req.category.categoryId } }
+        ]
+      },
+      { $pullAll: { ancestorsIds: [req.category.categoryId] } }
       )
       const queryCategory1 = await Category.updateMany(
-        { categoryId: req.category.categoryId },
-        { $set: { categoryId: req.body.toCategoryId } }
-      )
-      const queryCategory2 = await Category.updateMany(
-        { ancestorsIds: { $all: [req.category.categoryId] } },
+        { ancestorsIds: { $all: [req.category.categoryId, req.category._id] } },
         { $push: { ancestorsIds: req.body.toCategoryId } }
       )
-      const queryCategory3 = await Category.updateMany(
-        { ancestorsIds: { $all: [req.category.categoryId] } },
+      const queryCategory2 = await Category.updateMany(
+        { ancestorsIds: { $all: [req.category.categoryId, req.category._id] } },
         { $pullAll: { ancestorsIds: [req.category.categoryId] } }
       )
+      const queryCategory3 = await Category.updateOne(
+        { _id: req.category._id },
+        { $set: { categoryId: req.body.toCategoryId }, $push: { ancestorsIds: req.body.toCategoryId } }
+      )
+      const queryCategory4 = await Category.updateOne(
+        { _id: req.category._id },
+        { $pullAll: { ancestorsIds: [req.category.categoryId] } }
+      )
+
       session.commitTransaction()
       return successResponse(res, {
         message: UPDATE_CATEGORY_SUCCESS,
         data: {
           queryTemplate1,
           queryTemplate2,
-          queryTemplate3,
           queryCategory1,
           queryCategory2,
-          queryCategory3
+          queryCategory3,
+          queryCategory4
         }
       })
     } catch (e) {
