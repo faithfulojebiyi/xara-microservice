@@ -1,5 +1,10 @@
+
 # Xara 
 ## A template and category Microservice
+
+
+
+
 
 ## Installation
 
@@ -21,6 +26,8 @@ look at the example in `.env.example`
 
 `NODE_ENV`
 
+  
+
 
   ### To start your dev server 
 
@@ -30,10 +37,64 @@ look at the example in `.env.example`
   npm run dev
 ```
 
-### To run integration test
+## Running Tests
 
-Kill your dev server and run the following command in your root directory
+To run tests, run the following command
 
 ```bash
-  npm test
+  npm run test
 ```
+
+  
+## API Reference
+
+#### Create category
+
+```http
+  POST /api/v1/category/create
+```
+
+| Request Body Data | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `displayName` | `string` | **Required**. Name of the category |
+| `categoryId`  | `string` |**Default**  `Null` The category to be added to |
+
+#### Move category
+
+```http
+  PATCH /api/v1/category/move/:id
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id of the category to be moved |
+
+| Request Body Data | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `toCategoryId`      | `string` | **Required**. The id of the category to move to |
+
+
+
+#### Delete category
+
+```http
+  DELETE /api/v1/category/:id
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id of category to be deleted|
+
+#### Create template
+
+```http
+  POST /api/v1/template/create
+```
+
+| Request Body Data | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `displayName` | `string` | **Required**. Name of the template |
+| `categoryId`  | `string` |**Default**  `Null` The category to be added to |
+
+
+  
