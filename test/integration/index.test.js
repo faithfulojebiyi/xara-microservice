@@ -145,7 +145,7 @@ describe('API Integration Test', () => {
         done()
       })
   })
-  it('Should Move the category ‘Beach’ to the template ‘acapulco', (done) => {
+  it('Should Move the category Beach to the template acapulco the api response is 404 cause template is not a category', (done) => {
     chai.request(app).patch(`/api/v1/category/move/${beachId}`).send({
       toCategoryId: acapulcoId
     })

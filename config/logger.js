@@ -4,11 +4,16 @@ const config = require('./env')
 
 const { combine, label, timestamp, colorize, printf } = winston.format
 
-const getLogToProcess = (fileOpt, consoleOpt, mongoOpt) => {
+const getLogToProcess = (env, fileOpt, consoleOpt) => {
   const array = []
+  if (env === 'development') {
+    array.push(
+      new winston.transports.File(fileOpt),
+      new winston.transports.Console(consoleOpt)
+    )
+  }
   array.push(
-    new winston.transports.File(fileOpt),
-    new winston.transports.Console(consoleOpt)
+    new winston.transports.File(fileOpt)
   )
   return array
 }
@@ -73,7 +78,7 @@ class Logger {
       ...file,
       filename: `${this.logDir}/app.${this.environment}.log`
     }
-    const logToProcess = getLogToProcess(fileOpt, consoleOpt)
+    const logToProcess = getLogToProcess(this.environment, fileOpt, consoleOpt)
     return logToProcess
   }
 
