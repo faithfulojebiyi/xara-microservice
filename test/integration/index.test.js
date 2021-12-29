@@ -22,12 +22,12 @@ describe('API Integration Test', () => {
         console.log('categories collection not found')
       }
       console.log('Dropped categories collection')
-    })
-    db.dropCollection('templates', (err, res) => {
-      if (err) {
-        console.log('templates collection not found')
-      }
-      console.log('Dropped templates collection')
+      db.dropCollection('templates', (err, res) => {
+        if (err) {
+          console.log('templates collection not found')
+        }
+        console.log('Dropped templates collection')
+      })
     })
     done()
   })
