@@ -10,7 +10,8 @@ module.exports = {
   globals: {
     logger: 'readonly',
     describe: 'readonly',
-    it: 'readonly'
+    it: 'readonly',
+    before: 'readonly'
   },
   parserOptions: {
     ecmaVersion: 12

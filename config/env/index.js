@@ -4,7 +4,7 @@ const test = require('./test')
 const production = require('./production')
 
 const {
-  XARA_NODE_ENV: NODE_ENV
+  NODE_ENV
 } = process.env
 
 const currentEnv = {

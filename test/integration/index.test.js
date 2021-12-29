@@ -1,6 +1,7 @@
 const chai = require('chai')
 const chaiHttp = require('chai-http')
 const app = require('../../app')
+const db = require('../../app/db')
 
 const { constants } = require('../../app/utils')
 const { CATEGORY_NOT_FOUND } = constants
@@ -15,6 +16,21 @@ let exclusiveId
 let acapulcoId
 
 describe('API Integration Test', () => {
+  before((done) => {
+    db.dropCollection('categories', (err, res) => {
+      if (err) {
+        console.log('categories collection not found')
+      }
+      console.log('Dropped categories collection')
+    })
+    db.dropCollection('templates', (err, res) => {
+      if (err) {
+        console.log('templates collection not found')
+      }
+      console.log('Dropped templates collection')
+    })
+    done()
+  })
   it('Should Insert the category Travel Destinations', (done) => {
     chai.request(app).post('/api/v1/category/create').send({
       displayName: 'Travel Destinations',
