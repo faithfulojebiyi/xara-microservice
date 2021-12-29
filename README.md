@@ -13,7 +13,7 @@ Clone the repo from the git repository
 Run the following command in your root directory
 
 ```bash
-  npm Install
+  npm install
 ```
     
 ## Environment Variables
@@ -22,11 +22,11 @@ To run this project, you will need to add the following environment variables to
 
 look at the example in `.env.example`
 
-`DATABASE_URL`
+`DATABASE_URL` Mongodb connection string for dev database
 
-`TEST_DATABASE_URL`
+`TEST_DATABASE_URL` Mongodb connection string for test database
 
-`NODE_ENV`
+`NODE_ENV` Your current node environment your default should be `development`
 
   
 
@@ -41,10 +41,10 @@ look at the example in `.env.example`
 
 ## Running Tests
 
-To run tests, run the following command
+To run tests, run the following command make sure you kill your dev server
 
 ```bash
-  npm run test
+  npm test
 ```
 
   
