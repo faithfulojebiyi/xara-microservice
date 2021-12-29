@@ -157,7 +157,7 @@ describe('API Integration Test', () => {
         done()
       })
   })
-  it('Should Move the category Beach to the category Mexico', (done) => {
+  it('Should Move the category Beach to the category Mexico fix semantic mistake in test 6', (done) => {
     chai.request(app).patch(`/api/v1/category/move/${beachId}`).send({
       toCategoryId: mexicoId
     })
