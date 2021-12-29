@@ -240,7 +240,43 @@ static async moveCategoryToNewCategory (req, res, next) {
 
 `req.body.toCategoryId` this is category to be moved to and should now become the new `categoryId` of the category we want to move
 
-
+#### Delete Category
+```
+static async deleteCategory (req, res, next) {
+  const session = await db.startSession()
+  session.startTransaction()
+  try {
+    const templateQuery1 = await Template.deleteMany({ ancestorsIds: { $all: [req.params.id] } })
+    const categoryQuery1 = await Category.deleteMany({ ancestorsIds: { $all: [req.params.id] } })
+    const categoryQuery2 = await Category.deleteOne({ _id: req.params.id })
+    const category = await Category.findById({ _id: req.params.id })
+    const subCategory = await Category.find({ ancestorsIds: { $all: [req.params.id] } })
+    const template = await Template.find({ ancestorsIds: { $all: [req.params.id] } })
+    session.commitTransaction()
+    return successResponse(res, {
+      message: DELETE_CATEGORY_SUCCESS,
+      data: {
+        templateQuery1,
+        categoryQuery1,
+        categoryQuery2,
+        category,
+        subCategory,
+        template
+      }
+    })
+  } catch (e) {
+    session.abortTransaction()
+    const dbError = new DBError({
+      status: DELETE_CATEGORY_ERROR,
+      message: e.message
+    })
+    moduleErrLogMessager(dbError)
+    next(new ApiError({ message: DELETE_CATEGORY_ERROR }))
+  } finally {
+    session.endSession()
+  }
+}
+```
 
 ## 🚀 About Me
 ### My name is Faithful Ojebiyi. 
