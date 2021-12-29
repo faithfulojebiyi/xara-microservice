@@ -6,42 +6,47 @@
 
 
 
-## Installation
-
-Clone the repo from the git repository
-
-Run the following command in your root directory
-
-```bash
-  npm install
-```
-    
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables to your .env file
 
 look at the example in `.env.example`
 
-`DATABASE_URL` Mongodb connection string for dev database
+`DATABASE_URL`
 
-`TEST_DATABASE_URL` Mongodb connection string for test database
-
-`NODE_ENV` Your current node environment your default should be `development`
+`NODE_ENV`
 
   
+## Run Locally
 
+Clone the project
 
-  ### To start your dev server 
+```bash
+  git clone https://github.com/faithfulojebiyi/xara-microservice.git
+```
 
-  Run the following command in your root directory
+Go to the project directory
+
+```bash
+  cd my-project
+```
+
+Install dependencies
+
+```bash
+  npm install
+```
+
+Start the dev server
 
 ```bash
   npm run dev
 ```
 
+  
 ## Running Tests
 
-To run tests, run the following command make sure you kill your dev server
+To run tests, run the following command
 
 ```bash
   npm test
@@ -98,8 +103,143 @@ To run tests, run the following command make sure you kill your dev server
 | `displayName` | `string` | **Required**. Name of the template |
 | `categoryId`  | `string` |**Default**  `Null` The category to be added to |
 
-### Additional Info
-All logs are inside the `log` folder 
+
+  
+#
+
+## Documentation Reference
+
+### Models
+ 
+#### Categories
+
+```
+const categorySchema = new mongoose.Schema({
+  displayName: {
+    type: String,
+    required: true,
+    trim: true,
+    unique: true
+  },
+  categoryId: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Category'
+  },
+  ancestorsIds: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Category'
+    }
+  ]
+})
+
+```
+- The `categoryId` is the direct parent category `id`. If the category is an Alpha category that is does not have a parent category the categoryId is `null`
+
+- The `ancestorsIds` contains the ids of all the parent categories. If the category is an Alpha category that is does not have a parent category the `ancestorsIds` is an empty array `[]`
+
+#### Templates
+
+```
+const templateSchema = new mongoose.Schema({
+  displayName: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  categoryId: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Category'
+  },
+  ancestorsIds: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Category'
+    }
+  ]
+})
+```
+
+- The `categoryId` is the direct parent category `id`. If the template is an Alpha template that is does not have a parent category the categoryId is `null`
+
+- The `ancestorsIds` contains the ids of all the parent categories. If the template is an Alpha template that is it does not have a parent category the `ancestorsIds` is an empty array `[]`
+
+
+### ACID
+Using Transctions to make sure write operations are atomic. Most importantly when moving a category or deleting a category we have to make sure the subCategories and template reflect the changes.
+
+#### Move Category
+
+```
+static async moveCategoryToNewCategory (req, res, next) {
+  const session = await db.startSession()
+  session.startTransaction()
+  try {
+    const queryTemplate1 = await Template.updateMany({
+      $and: [
+        { ancestorsIds: { $all: [req.category.categoryId] } },
+        { categoryId: { $ne: req.category.categoryId } }
+      ]
+    },
+    { $push: { ancestorsIds: req.body.toCategoryId } }
+    )
+    const queryTemplate2 = await Template.updateMany({
+      $and: [
+        { ancestorsIds: { $all: [req.category.categoryId] } },
+        { categoryId: { $ne: req.category.categoryId } }
+      ]
+    },
+    { $pullAll: { ancestorsIds: [req.category.categoryId] } }
+    )
+    const queryCategory1 = await Category.updateMany(
+      { ancestorsIds: { $all: [req.category.categoryId, req.category._id] } },
+      { $push: { ancestorsIds: req.body.toCategoryId } }
+    )
+    const queryCategory2 = await Category.updateMany(
+      { ancestorsIds: { $all: [req.category.categoryId, req.category._id] } },
+      { $pullAll: { ancestorsIds: [req.category.categoryId] } }
+    )
+    const queryCategory3 = await Category.updateOne(
+      { _id: req.category._id },
+      { $set: { categoryId: req.body.toCategoryId }, $push: { ancestorsIds: req.body.toCategoryId } }
+    )
+    const queryCategory4 = await Category.updateOne(
+      { _id: req.category._id },
+      { $pullAll: { ancestorsIds: [req.category.categoryId] } }
+    )
+
+    session.commitTransaction()
+    return successResponse(res, {
+      message: UPDATE_CATEGORY_SUCCESS,
+      data: {
+        queryTemplate1,
+        queryTemplate2,
+        queryCategory1,
+        queryCategory2,
+        queryCategory3,
+        queryCategory4
+      }
+    })
+  } catch (e) {
+    session.abortTransaction()
+    const dbError = new DBError({
+      status: UPDATE_CATEGORY_ERROR,
+      message: e.message
+    })
+    moduleErrLogMessager(dbError)
+    next(new ApiError({ message: UPDATE_CATEGORY_ERROR }))
+  } finally {
+    session.endSession()
+  }
+}
+
+```
+
+
+`req.category.categoryId` this is the parent category `id` the current category belongs to Also known as the category to be moved from
+
+`req.body.toCategoryId` this is category to be moved to and should now become the new `categoryId` of the category we want to move
+
 
 
 ## 🚀 About Me
@@ -107,8 +247,10 @@ All logs are inside the `log` folder
 I am a framework-agnostic Backend Heavy Javascript developer;
 
 - 🌱 I’m currently learning how to build D3Apps using blockchain
-- 🖥 My current development stack is Nodejs, MongoDB, PostgreSQL, MySQL, Redis Expressjs React, Vuejs, Nextjs, Nuxt, Python, Flask, Docker, 
+- 🖥 My current development stack is React, Vuejs, Nextjs, Nuxt, Nodejs, MongoDB, PostgreSQL, MySQL, Redis Expressjs, Python, Flask, Docker, 
 - 📫 How to reach me: [faithfulojebiyi@gmail.com](mailto:faithfulojebiyi@gmail.com)
 - 😄 Pronouns: He/Him
 - ⚡ Fun fact: I turn coffee to code and music keeps me going. I am a perfectionist
 - 🏅 Github Profile Visits ![Visitor Count](https://profile-counter.glitch.me/faithfulojebiyi/count.svg)
+
+  
