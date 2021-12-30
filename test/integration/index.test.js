@@ -28,8 +28,8 @@ describe('API Integration Test', () => {
         }
         console.log('Dropped templates collection')
       })
+      done()
     })
-    done()
   })
   it('Should Insert the category Travel Destinations', (done) => {
     chai.request(app).post('/api/v1/category/create').send({
