@@ -177,7 +177,7 @@ static async moveCategoryToNewCategory (req, res, next) {
   try {
     const queryTemplate1 = await Template.updateMany({
       $and: [
-        { ancestorsIds: { $all: [req.category.categoryId] } },
+        { ancestorsIds: { $all: [req.category.categoryId, req.category._id] } },
         { categoryId: { $ne: req.category.categoryId } }
       ]
     },
@@ -185,7 +185,7 @@ static async moveCategoryToNewCategory (req, res, next) {
     )
     const queryTemplate2 = await Template.updateMany({
       $and: [
-        { ancestorsIds: { $all: [req.category.categoryId] } },
+        { ancestorsIds: { $all: [req.category.categoryId, req.category._id] } },
         { categoryId: { $ne: req.category.categoryId } }
       ]
     },
