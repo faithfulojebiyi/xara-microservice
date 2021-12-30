@@ -40,6 +40,9 @@ describe('API Integration Test', () => {
         if (err) return done(err)
         expect(res.body.status).to.be.equal('success')
         expect(res.body.data.displayName).to.be.equal('Travel Destinations')
+        expect(res.body.data.categoryId).to.be.equal(null)
+        expect(res.body.data.ancestorsIds).to.be.an('array')
+        expect(res.body.data.ancestorsIds.length).to.be.equal(0)
         travelDestinationId = res.body.data._id
         done()
       })
@@ -53,6 +56,7 @@ describe('API Integration Test', () => {
         if (err) return done(err)
         expect(res.body.status).to.be.equal('success')
         expect(res.body.data.displayName).to.be.equal('Mexico')
+        expect(res.body.data.categoryId).to.be.equal(travelDestinationId)
         mexicoId = res.body.data._id
         done()
       })
@@ -66,6 +70,7 @@ describe('API Integration Test', () => {
         if (err) return done(err)
         expect(res.body.status).to.be.equal('success')
         expect(res.body.data.displayName).to.be.equal('Germany')
+        expect(res.body.data.categoryId).to.be.equal(travelDestinationId)
         germanyId = res.body.data._id
         done()
       })
@@ -79,6 +84,7 @@ describe('API Integration Test', () => {
         if (err) return done(err)
         expect(res.body.status).to.be.equal('success')
         expect(res.body.data.displayName).to.be.equal('acapulco')
+        expect(res.body.data.categoryId).to.be.equal(mexicoId)
         acapulcoId = res.body.data._id
         done()
       })
@@ -92,6 +98,7 @@ describe('API Integration Test', () => {
         if (err) return done(err)
         expect(res.body.status).to.be.equal('success')
         expect(res.body.data.displayName).to.be.equal('munich')
+        expect(res.body.data.categoryId).to.be.equal(germanyId)
         done()
       })
   })
@@ -104,6 +111,7 @@ describe('API Integration Test', () => {
         if (err) return done(err)
         expect(res.body.status).to.be.equal('success')
         expect(res.body.data.displayName).to.be.equal('Beach')
+        expect(res.body.data.categoryId).to.be.equal(germanyId)
         beachId = res.body.data._id
         done()
       })
@@ -117,6 +125,7 @@ describe('API Integration Test', () => {
         if (err) return done(err)
         expect(res.body.status).to.be.equal('success')
         expect(res.body.data.displayName).to.be.equal('los cabos')
+        expect(res.body.data.categoryId).to.be.equal(beachId)
         done()
       })
   })
@@ -129,6 +138,7 @@ describe('API Integration Test', () => {
         if (err) return done(err)
         expect(res.body.status).to.be.equal('success')
         expect(res.body.data.displayName).to.be.equal('Exclusive')
+        expect(res.body.data.categoryId).to.be.equal(beachId)
         exclusiveId = res.body.data._id
         done()
       })
@@ -142,6 +152,7 @@ describe('API Integration Test', () => {
         if (err) return done(err)
         expect(res.body.status).to.be.equal('success')
         expect(res.body.data.displayName).to.be.equal('la paz')
+        expect(res.body.data.categoryId).to.be.equal(exclusiveId)
         done()
       })
   })
@@ -189,6 +200,9 @@ describe('API Integration Test', () => {
         if (err) return done(err)
         expect(res.body.status).to.be.equal('success')
         expect(res.body.data.displayName).to.be.equal('memo')
+        expect(res.body.data.categoryId).to.be.equal(null)
+        expect(res.body.data.ancestorsIds).to.be.an('array')
+        expect(res.body.data.ancestorsIds.length).to.be.equal(0)
         done()
       })
   })
