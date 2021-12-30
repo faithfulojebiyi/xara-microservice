@@ -16,17 +16,9 @@ const categorySchema = new mongoose.Schema({
       type: mongoose.Schema.ObjectId,
       ref: 'Category'
     }
-  ],
-  createdAt: {
-    type: Date,
-    immutable: true,
-    default: () => Date.now()
-  },
-  updatedAt: {
-    type: Date,
-    default: () => Date.now()
-  }
-})
+  ]
+},
+{ timestamps: true })
 
 const Category = mongoose.model('Category', categorySchema)
 
