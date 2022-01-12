@@ -142,7 +142,7 @@ class CategoryController {
           { categoryId: { $ne: req.category.categoryId } }
         ]
       },
-      { $push: { ancestorsIds: req.body.toCategoryId } }
+      { $addToSet: { ancestorsIds: req.body.toCategoryId } }
       )
       const queryTemplate2 = await Template.updateMany({
         $and: [
@@ -154,7 +154,7 @@ class CategoryController {
       )
       const queryCategory1 = await Category.updateMany(
         { ancestorsIds: { $all: [req.category.categoryId, req.category._id] } },
-        { $push: { ancestorsIds: req.body.toCategoryId } }
+        { $addToSet: { ancestorsIds: req.body.toCategoryId } }
       )
       const queryCategory2 = await Category.updateMany(
         { ancestorsIds: { $all: [req.category.categoryId, req.category._id] } },
@@ -162,7 +162,7 @@ class CategoryController {
       )
       const queryCategory3 = await Category.updateOne(
         { _id: req.category._id },
-        { $set: { categoryId: req.body.toCategoryId }, $push: { ancestorsIds: req.body.toCategoryId } }
+        { $set: { categoryId: req.body.toCategoryId }, $addToSet: { ancestorsIds: req.body.toCategoryId } }
       )
       const queryCategory4 = await Category.updateOne(
         { _id: req.category._id },
